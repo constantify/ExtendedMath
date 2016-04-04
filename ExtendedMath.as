@@ -132,22 +132,14 @@
 		}		
 		// Calculates the shortest difference between two given angles given in degrees.
 		public static function deltaAngle(angle1:Number, angle2:Number):Number {			
-			  var currRotation:Number = angle1;
-			  var newCourse:Number = angle2;
-			  var deltaAngle:int = (180/Math.PI) * Math.atan2((Math.cos(currRotation * Math.PI/180) * Math.sin(newCourse * Math.PI/180) - Math.sin(currRotation * Math.PI/180) * Math.cos(newCourse * Math.PI/180)), (Math.sin(currRotation * Math.PI/180) * Math.sin(newCourse * Math.PI/180) + Math.cos(currRotation * Math.PI/180) * Math.cos(newCourse * Math.PI/180)));
-			  return deltaAngle;
+			var currRotation:Number = angle1;
+			var newCourse:Number = angle2;
+			var deltaAngle:int = (180/Math.PI) * Math.atan2((Math.cos(currRotation * Math.PI/180) * Math.sin(newCourse * Math.PI/180) - Math.sin(currRotation * Math.PI/180) * Math.cos(newCourse * Math.PI/180)), (Math.sin(currRotation * Math.PI/180) * Math.sin(newCourse * Math.PI/180) + Math.cos(currRotation * Math.PI/180) * Math.cos(newCourse * Math.PI/180)));
+			return deltaAngle;
 		}		
 		// Calculates the shortest difference between two given angles given in radians.
 		public static function deltaAngleRad(angle1:Number, angle2:Number):Number {			
 			return deg2rad(deltaAngle(angle1,angle2));
-		}
-		// Convert degrees to radians
-		public static function deg2rad(val:Number):Number {
-			return val * PI / 180;
-		}
-		// Convert radians to degrees
-		public static function rad2deg(val:Number):Number {
-			return val * 180 / PI;
 		}
 		// Returns the closest power of two value.
 		public static function closestPowerOfTwo(val:Number):int {
@@ -157,6 +149,23 @@
 		public static function isPowerOfTwo(val:Number):Boolean {
 			//return (closestPowerOfTwo(val) == val) ? true : false;	
 			return (val>0) ? ((val & -val) == val) : false;
+		}		
+		// Converts the given value from gamma (sRGB) to linear color space.
+		public static function gammaToLinearSpace(val:Number, gamma:Number, max:Number):Number { 
+			return max*pow(val/max, gamma);
+		}
+		// Converts the given value from linear to gamma (sRGB) color space.
+		public static function linearToGammaSpace(val:Number, gamma:Number, max:Number):Number { 
+			return max*pow(val/max, 1/gamma);
+		}
+		// UTILITY METHODDS
+		// Convert degrees to radians
+		public static function deg2rad(val:Number):Number {
+			return val * PI / 180;
+		}
+		// Convert radians to degrees
+		public static function rad2deg(val:Number):Number {
+			return val * 180 / PI;
 		}
 	}
 	
