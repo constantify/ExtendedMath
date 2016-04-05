@@ -1,4 +1,5 @@
 ﻿package {
+	import flash.utils.getTimer;
 	
 	
 	public final class ExtendedMath {
@@ -99,6 +100,7 @@
 		// Linearly interpolates between a and b by t (inverse).
 		public static function inverseLerp(val1:Number, val2:Number, t:Number):Number { 
 			// tbi
+			return 0;
 		}
 		// Moves a value current towards target.
 		public static function moveTowards(current:Number, target:Number, maxDelta:Number):Number {
@@ -157,6 +159,25 @@
 		// Converts the given value from linear to gamma (sRGB) color space.
 		public static function linearToGammaSpace(val:Number, gamma:Number, max:Number):Number { 
 			return max*pow(val/max, 1/gamma);
+		}
+		// PingPongs the value t, so that it is never larger than length and never smaller than 0.
+		public static function pingPong(t:Number, len:Number):Number {
+			if (t < 0) t = -t;
+			var mod:Number = t % len;
+			// if mod is even
+			if (ceil(t / len) % 2 === 0) {
+			  return (mod === 0) ? 0 : len - (mod);
+			}
+
+			return (mod === 0) ? len : mod;
+		}
+		// Loops the value t, so that it is never larger than length and never smaller than 0.
+		public static function repeat(t:Number, len:Number):Number { 
+			return t % len;
+		}
+		// Returns the sign of val.
+		public static function sign(val:Number):int { 
+			return (val < 0) ? -1 : 1;
 		}
 		// UTILITY METHODDS
 		// Convert degrees to radians
