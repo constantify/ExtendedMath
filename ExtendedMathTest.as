@@ -15,7 +15,10 @@
 			
 			for each( var t in [0,1,2,3,4,5,6,7,8]) {
 			   //trace(ExtendedMath.pingPong(t, 3));
-		    }
+		    }			
+			trace(ExtendedMath.smallestPowerOfTwo(999));
+			trace(ExtendedMath.closestPowerOfTwo(999));
+			trace(ExtendedMath.nextPowerOfTwo(999));
 		}
 
 	}
