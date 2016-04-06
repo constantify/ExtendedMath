@@ -98,14 +98,18 @@
 			return val1 * (1 - t) + val2 * t;
 		}
 		// Linearly interpolates between a and b by t (inverse).
-		public static function inverseLerp(val1:Number, val2:Number, t:Number):Number { 
-			// tbi
-			return 0;
+		public static function inverseLerp(a:Number, b:Number, val:Number):Number { 
+			return (clamp(val, min(a, b), max(a, b)) - a) / (b - a);
 		}		
-		// Linearly interpolates between a and b by t (inverse).
-		public static function lerpAngle(val1:Number, val2:Number, t:Number):Number { 
-			// tbi
-			return 0;
+		// Same as Lerp but makes sure the values interpolate correctly when they wrap around 360 degrees.
+		public static function lerpAngle(a:Number, b:Number, val:Number):Number { 
+			while (a > b + PI) {
+				b += PI*2;
+			}
+			while (b > a + PI) {
+				b -= PI*2;
+			}
+			return lerp(a, b, val);
 		}
 		// Moves a value current towards target.
 		public static function moveTowards(current:Number, target:Number, maxDelta:Number):Number {
@@ -220,9 +224,8 @@
 			var mod:Number = t % len;
 			// if mod is even
 			if (ceil(t / len) % 2 === 0) {
-			  return (mod === 0) ? 0 : len - (mod);
+				return (mod === 0) ? 0 : len - mod;
 			}
-
 			return (mod === 0) ? len : mod;
 		}
 		// Loops the value t, so that it is never larger than length and never smaller than 0.
