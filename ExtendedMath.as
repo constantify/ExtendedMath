@@ -236,6 +236,13 @@
 		public static function sign(val:Number):int { 
 			return (val < 0) ? -1 : 1;
 		}
+		// Generate 2D Perlin noise.
+		public static function perlinNoise(x:Number, y:Number):Number { 
+			// tbi
+			// although you can use the BitmapData's method to generate the perlin noise which generates a Perlin noise image. 
+			// public function perlinNoise(baseX:Number, baseY:Number, numOctaves:uint, randomSeed:int, stitch:Boolean, fractalNoise:Boolean, channelOptions:uint = 7, grayScale:Boolean = false, offsets:Array = null):void
+			return 0;
+		}
 		// UTILITY METHODDS
 		// Convert degrees to radians
 		public static function deg2rad(val:Number):Number {
