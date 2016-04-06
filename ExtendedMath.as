@@ -101,10 +101,20 @@
 		public static function inverseLerp(val1:Number, val2:Number, t:Number):Number { 
 			// tbi
 			return 0;
+		}		
+		// Linearly interpolates between a and b by t (inverse).
+		public static function lerpAngle(val1:Number, val2:Number, t:Number):Number { 
+			// tbi
+			return 0;
 		}
 		// Moves a value current towards target.
 		public static function moveTowards(current:Number, target:Number, maxDelta:Number):Number {
 			var delta:Number = target - current;
+			return (maxDelta >= delta) ? target : current + maxDelta;
+		}
+		// Same as MoveTowards but makes sure the values interpolate correctly when they wrap around 360 degrees.
+		public static function moveTowardsAngle(current:Number, target:Number, maxDelta:Number):Number {
+			var delta:Number = deltaAngle(target, current);
 			return (maxDelta >= delta) ? target : current + maxDelta;
 		}
 		// Gradually changes a value towards a desired goal over time.
@@ -131,7 +141,39 @@
 				currentVelocity = 0;
 			}
 			return result;
-		}		
+		}	
+		// Gradually changes an angle given in degrees towards a desired goal angle over time.
+		public static function smoothDampAngle(current:Number, target:Number, currentVelocity:Number, smoothTime:Number, maxSpeed:Number = INFINITY, deltaTime:Number=0):Number {
+			if(deltaTime == 0) {
+				deltaTime = Time.deltaTime;
+			}
+			smoothTime = max(0.0001, smoothTime);
+			var omega:Number = 2 / smoothTime;
+			var x:Number = omega * deltaTime;
+			var exp:Number = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x);
+			var deltaX:Number = deltaAngle(target, current);
+			var maxDelta = maxSpeed * smoothTime;
+			
+			// ensure we do not exceed our max speed
+			deltaX = clamp(deltaX, -maxDelta, maxDelta);
+			var temp:Number = (currentVelocity + omega * deltaX) * deltaTime;
+			var result:Number = current - deltaX + (deltaX + temp) * exp;
+			currentVelocity = (currentVelocity - omega * temp) * exp;
+			
+			// ensure that we do not overshoot our target
+			if ((target - current > 0) == (result > target)) {
+				result = target;
+				currentVelocity = 0;
+			}
+			return result;
+		}
+		// Interpolates between min and max with smoothing at the limits.
+		public static function smoothstep(min:Number, max:Number, val:Number):Number {
+			// Scale, bias and saturate x to 0..1 range
+			val = clamp01((val - min) / (max - min));
+			// Evaluate polynomial
+			return val*val*(3 - 2 * val);
+		}
 		// Calculates the shortest difference between two given angles given in degrees.
 		public static function deltaAngle(angle1:Number, angle2:Number):Number {			
 			var currRotation:Number = angle1;
@@ -145,7 +187,19 @@
 		}
 		// Returns the closest power of two value.
 		public static function closestPowerOfTwo(val:Number):int {
-			return pow( 2, ( log(val) / log(2) ) << 0 );			
+			var smallest:Number = smallestPowerOfTwo(val);
+			var next:Number = nextPowerOfTwo(val);
+			var downDiff:Number = val-smallest;
+			var upDiff:Number = next-val;
+			return (downDiff < upDiff) ? smallest : next;
+		}
+		// Returns the smallest power of two value.
+		public static function smallestPowerOfTwo(val:Number):int {
+			return pow(2, ( log(val) / log(2) ) << 0);			
+		}
+		// Returns the next power of two value.
+		public static function nextPowerOfTwo(val:Number):Number {
+			return smallestPowerOfTwo(val)<<1;
 		}
 		// 	Returns true if the value is power of two.
 		public static function isPowerOfTwo(val:Number):Boolean {
