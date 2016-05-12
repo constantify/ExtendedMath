@@ -38,7 +38,11 @@
 		
 		// We're mapping native AS3 Math metods		
 		// Computes and returns an absolute value for the number specified by the parameter val.
-		public static function abs(val:Number):Number { return Math.abs(val); }	
+		public static function abs(val:Number):Number { 
+			// 3000% faster than Math.abs();
+			return (val ^ (val >> 31)) - (val >> 31);
+			// return Math.abs(val); 
+		}	
 		// Computes and returns the arc cosine of the specified angle in radians.
 		public static function acos(angleRadians:Number):Number { return Math.acos(angleRadians); }
 		// Computes and returns the arc sine of the specified angle in radians.
@@ -76,6 +80,38 @@
 		//////////////////////
 		/*     NEW STUFF    */
 		//////////////////////
+		// Checks if a number is even
+		public static function even(val:Number):Boolean { 
+			// 600% faster than val%2 == 0
+			return (val & 1) == 0;
+		}
+		// Faster modulo for numbers divided by divisors which are power of 2
+		public static function modulo(val:Number, divisor:int):int { 
+			if(isPowerOfTwo(divisor)) {
+				// 600% faster
+				return val & (divisor - 1);
+			} 
+			return val%divisor;
+		}
+		// Checks if two numbers have the same sign
+		public static function sameSign(val1:Number, val2:Number):Boolean { 
+			// 35% faster than val1*val2>0
+			return (val1 ^ val2) >= 0;
+		}
+		// Flip sign
+		public static function flipSign(val:Number):Number { 
+			// 300% faster than val = -val;
+			return (val ^ -1) + 1;
+		}
+		// Swap integers
+		public static function swapIntegers(val1:int, val2:int):Object { 
+			// 20% faster than using a temp variable
+			val1 ^= val2;			
+			val2 ^= val1;
+			val1 ^= val2;
+			// shorter val2^=val1^=val2^=val1;
+			return {v1:val1, v2:val2};
+		}
 		// Compares two floating point values if they are similar.
 		public static function approximately(val1:Number, val2:Number):Boolean { 
 			return abs(val1 - val2) < EPSILON; 
